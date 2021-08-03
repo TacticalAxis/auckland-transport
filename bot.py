@@ -25,16 +25,16 @@ async def on_ready():
     guild_ids=guilds,
     options=[
         create_option(
-            name="bus-id",
+            name="vehicleid",
             description="set the bus ID",
             required=True,
             option_type=3
         )
     ]
 )
-async def _locate(ctx:SlashContext, busNo:str):
-    msg = await ctx.send("`Loading Bus: {}`".format(busNo.upper()))
-    data = getVehicle(busNo.upper())
+async def _locate(ctx:SlashContext, vehicleid:str):
+    msg = await ctx.send("`Loading Bus: {}`".format(vehicleid.upper()))
+    data = getVehicle(vehicleid.upper())
     if not data == None:
         embed = discord.Embed(title=":{}:  [Details for {}: {}]".format(data["type"], data["type"].capitalize(), data["route_short"]), description=data["route_description"], color=0x00ff00)
         embed.add_field(name="Location", value="https://www.google.com/maps/search/?api=1&query={},{}".format(data["latitude"], data["longitude"]), inline=False)
@@ -42,6 +42,6 @@ async def _locate(ctx:SlashContext, busNo:str):
         embed.add_field(name="Destination/Next Stop: {}".format(data["next_stop"]), value="Location: {}\nTime: {}".format(data["next_stop_name"], data["next_stop_time"]), inline=False)
         await ctx.channel.send(embed=embed)
     else:
-        await ctx.send("`Sorry, no vehicle with ID: {} was found!`".format(busNo.upper()))
+        await ctx.send("`Sorry, no vehicle with ID: {} was found!`".format(vehicleid.upper()))
 
 client.run(TOKEN)

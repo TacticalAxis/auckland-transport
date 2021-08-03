@@ -109,7 +109,7 @@ def getCombinedData(busRealID:str):
 
         finalData["latitude"] = combinedData[1]["vehicle"]["position"]["latitude"]
         finalData["longitude"] = combinedData[1]["vehicle"]["position"]["longitude"]
-        finalData["speed"] = combinedData[1]["vehicle"]["position"]["speed"] * 3.6
+        finalData["speed"] = combinedData[1]["vehicle"]["position"]["speed"]
         finalData["number_plate"] = combinedData[1]["vehicle"]["vehicle"]["license_plate"] # no
 
         return finalData
@@ -124,17 +124,19 @@ def getVehicle(vehicleID:str):
             newVehicleID = "HE0" + vehicleID[2:]
     else:
         newVehicleID = vehicleID
-    newVehicleID = newVehicleID.upper()
+    newVehicleID = newVehicleID.upper().strip()
 
     finalID = None
     
     data = getData("/v2/public/realtime/vehiclelocations", {}, "getVehicleID")
     if (data != None):
         vehicleData = data["response"]["entity"]
+
         for i in range(0, len(vehicleData)):
             try:
                 if (vehicleData[i]["vehicle"]["vehicle"]["label"] != None):
-                    if ("".join(vehicleData[i]["vehicle"]["vehicle"]["label"]).strip() == str(newVehicleID).strip()):
+                    compare = "".join(vehicleData[i]["vehicle"]["vehicle"]["label"]).strip()
+                    if (compare == newVehicleID):
                         finalID = vehicleData[i]["vehicle"]["vehicle"]["id"]
                         break
             except Exception as e:
