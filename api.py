@@ -87,32 +87,35 @@ def getTrip(tripID:str, stopSequence:int):
 def getCombinedData(busRealID:str):
     data = getData("/v2/public/realtime".format(busRealID),  {"vehicleid": busRealID}, "getCombinedData")
     if (data != None or data != []):
-        combinedData = data["response"]["entity"]
-        finalData = {}
-        
-        finalData["trip_id"] = combinedData[0]["trip_update"]["trip"]["trip_id"]
-        finalData["route_id"] = combinedData[0]["trip_update"]["trip"]["route_id"]
-        finalData["stop_sequence"] = combinedData[0]["trip_update"]["stop_time_update"]["stop_sequence"]
-        finalData["stop_id"] = combinedData[0]["trip_update"]["stop_time_update"]["stop_id"]
-        
-        tripData = getTrip(finalData["trip_id"], finalData["stop_sequence"] + 1)
-        
-        finalData["next_stop"] = tripData["next_stop"]
-        finalData["next_stop_time"] = tripData["next_stop_time"]
+        try:
+            combinedData = data["response"]["entity"]
+            finalData = {}
+            
+            finalData["trip_id"] = combinedData[0]["trip_update"]["trip"]["trip_id"]
+            finalData["route_id"] = combinedData[0]["trip_update"]["trip"]["route_id"]
+            finalData["stop_sequence"] = combinedData[0]["trip_update"]["stop_time_update"]["stop_sequence"]
+            finalData["stop_id"] = combinedData[0]["trip_update"]["stop_time_update"]["stop_id"]
+            
+            tripData = getTrip(finalData["trip_id"], finalData["stop_sequence"] + 1)
+            
+            finalData["next_stop"] = tripData["next_stop"]
+            finalData["next_stop_time"] = tripData["next_stop_time"]
 
-        stopData = getStop(finalData["stop_id"])
-        finalData["next_stop_name"] = stopData["stop_name"]
+            stopData = getStop(finalData["stop_id"])
+            finalData["next_stop_name"] = stopData["stop_name"]
 
-        routeData = getRoute(finalData["route_id"])
-        finalData["route_short"] = routeData["route_short_name"]
-        finalData["route_description"] = routeData["route_description"]
+            routeData = getRoute(finalData["route_id"])
+            finalData["route_short"] = routeData["route_short_name"]
+            finalData["route_description"] = routeData["route_description"]
 
-        finalData["latitude"] = combinedData[1]["vehicle"]["position"]["latitude"]
-        finalData["longitude"] = combinedData[1]["vehicle"]["position"]["longitude"]
-        finalData["speed"] = combinedData[1]["vehicle"]["position"]["speed"]
-        finalData["number_plate"] = combinedData[1]["vehicle"]["vehicle"]["license_plate"] # no
+            finalData["latitude"] = combinedData[1]["vehicle"]["position"]["latitude"]
+            finalData["longitude"] = combinedData[1]["vehicle"]["position"]["longitude"]
+            finalData["speed"] = combinedData[1]["vehicle"]["position"]["speed"]
+            #finalData["number_plate"] = combinedData[1]["vehicle"]["vehicle"]["license_plate"] # no
 
-        return finalData
+            return finalData
+        except Exception as e:
+            return None
     else:
         return None
 
@@ -124,18 +127,19 @@ def getVehicle(vehicleID:str):
             newVehicleID = "HE0" + vehicleID[2:]
     else:
         newVehicleID = vehicleID
-    newVehicleID = newVehicleID.upper().strip()
+    newVehicleID = "".join(newVehicleID.upper().strip().split()).strip()
+    print(newVehicleID)
 
     finalID = None
     
     data = getData("/v2/public/realtime/vehiclelocations", {}, "getVehicleID")
     if (data != None):
         vehicleData = data["response"]["entity"]
-
         for i in range(0, len(vehicleData)):
             try:
                 if (vehicleData[i]["vehicle"]["vehicle"]["label"] != None):
-                    compare = "".join(vehicleData[i]["vehicle"]["vehicle"]["label"]).strip()
+                    compare = "".join(vehicleData[i]["vehicle"]["vehicle"]["label"].split()).strip()
+                    # print(compare + ": " + newVehicleID)
                     if (compare == newVehicleID):
                         finalID = vehicleData[i]["vehicle"]["vehicle"]["id"]
                         break
@@ -144,17 +148,19 @@ def getVehicle(vehicleID:str):
         
         if finalID != None:
             finalData = getCombinedData(finalID)
-            finalData["id"] = newVehicleID
-
-            if (len(newVehicleID) >= 3):
-                if (len(newVehicleID) == 6):
-                    if (newVehicleID[:3].isalpha()) and (newVehicleID[3:].isdigit()):
-                        finalData["type"] = "train"
-                    elif (newVehicleID[:2].isalpha()) and (newVehicleID[4:].isdigit()):
-                        finalData["type"] = "bus"
-                    else:
-                        finalData["type"] = "ferry"
-            return finalData
+            if finalData != None:
+                finalData["id"] = newVehicleID
+                if (len(newVehicleID) >= 3):
+                    if (len(newVehicleID) == 6):
+                        if (newVehicleID[:3].isalpha()) and (newVehicleID[3:].isdigit()):
+                            finalData["type"] = "train"
+                        elif (newVehicleID[:2].isalpha()) and (newVehicleID[4:].isdigit()):
+                            finalData["type"] = "bus"
+                        else:
+                            finalData["type"] = "ferry"
+                return finalData
+            else:
+                return None
         else:
             return None
     else:

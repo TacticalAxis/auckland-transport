@@ -18,7 +18,7 @@ async def on_ready():
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.streaming, name="{} vehicles".format(getActiveNumber())))
     print("Bot Ready!")
 
-#/locatebus
+# /locate command
 @slash.slash(
     name="locate",
     description="Locate a bus",
@@ -33,7 +33,7 @@ async def on_ready():
     ]
 )
 async def _locate(ctx:SlashContext, vehicleid:str):
-    msg = await ctx.send("`Loading Bus: {}`".format(vehicleid.upper()))
+    msg = await ctx.send("`Loading Vehicle: {}`".format(vehicleid.upper()))
     data = getVehicle(vehicleid.upper())
     if not data == None:
         embed = discord.Embed(title=":{}:  [Details for {}: {}]".format(data["type"], data["type"].capitalize(), data["route_short"]), description=data["route_description"], color=0x00ff00)
