@@ -36,11 +36,22 @@ async def _locate(ctx:SlashContext, vehicleid:str):
     msg = await ctx.send("`Loading Vehicle: {}`".format(vehicleid.upper()))
     data = getVehicle(vehicleid.upper())
     if not data == None:
-        embed = discord.Embed(title=":{}:  [Details for {}: {}]".format(data["type"], data["type"].capitalize(), data["route_short"]), description=data["route_description"], color=0x00ff00)
-        embed.add_field(name="Location", value="https://www.google.com/maps/search/?api=1&query={},{}".format(data["latitude"], data["longitude"]), inline=False)
-        embed.add_field(name="Speed", value="{:.1f} km/h".format(data["speed"]), inline=False)
-        embed.add_field(name="Destination/Next Stop: {}".format(data["next_stop"]), value="Location: {}\nTime: {}".format(data["next_stop_name"], data["next_stop_time"]), inline=False)
-        await ctx.channel.send(embed=embed)
+        if data["type"] == "ferry":
+            embed = discord.Embed(title=":{}:  [Details for {}: {}]".format(data["type"], data["type"].capitalize(), data["label"]), description="Details for Auckland Transport Ferry Service", color=0x00ff00)
+            embed.add_field(name="Location", value="https://www.google.com/maps/search/?api=1&query={},{}".format(data["latitude"], data["longitude"]), inline=False)
+            embed.add_field(name="Speed", value="{:.1f} km/h".format(data["speed"]), inline=False)
+            embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/867736415994511390/872817149599678474/pirateship.png")
+            await ctx.channel.send(embed=embed)
+        else:
+            embed = discord.Embed(title=":{}:  [Details for {}: {}]".format(data["type"], data["type"].capitalize(), data["route_short"]), description=data["route_description"], color=0x00ff00)
+            embed.add_field(name="Location", value="https://www.google.com/maps/search/?api=1&query={},{}".format(data["latitude"], data["longitude"]), inline=False)
+            embed.add_field(name="Speed", value="{:.1f} km/h".format(data["speed"]), inline=False)
+            embed.add_field(name="Destination/Next Stop: {}".format(data["next_stop"]), value="Location: {}\nTime: {}".format(data["next_stop_name"], data["next_stop_time"]), inline=False)
+            if data["type"] == "train":
+                embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/867736415994511390/872817147414466590/thomas.png")
+            else:
+                embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/867736415994511390/872817148014248016/magicschoolbus.png")
+            await ctx.channel.send(embed=embed)
     else:
         await ctx.send("`Sorry, no vehicle with ID: {} was found!`".format(vehicleid.upper()))
 
