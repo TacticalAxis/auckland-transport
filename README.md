@@ -8,7 +8,8 @@ The aim of this Discord Bot is to provide users on the Discord platform a way to
 Since this bot is currently in a very early development stage, it is not available to the public to be added to their personal servers.
 
 ## Commands:
-> /locate VEHICLEID - This command shows the route, destination, location and speed of the vehicle requested
+> /locate <_vehicleID_>
+
 Through the use of the Vehicle ID system (i.e. AMP129 - train, or RT1303 - bus), using this in combination with the /locate command on a server with this bot, it displays the relevant information for that vehicle.
 
 Both buses and trains show the route short name (i.e EAST - train, or 95C - bus), the route description, current location, speed, and next-stop information. This is only available for buses and trains, as they go from stop to stop, since ferries travel from a departure location directly to an arrival location. The next-stop information shows the stop number, location, and estimated time of arrival
