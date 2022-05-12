@@ -189,3 +189,18 @@ def getVehicle(vehicleID:str):
             return None
     else:
         return None
+
+def getStopInfo(stopID:str, max:int):
+    data = getData("/v2/gtfs/stops/stopinfo/{}".format(stopID),  {}, "getStopInfo")
+    finalData = []
+    if data != None:
+        count = 0
+        for i in data["response"]:
+            finalData.append(i)
+            count += 1
+            if count == max:
+                break
+    else:
+        return None
+    
+    return finalData

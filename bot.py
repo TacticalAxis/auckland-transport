@@ -4,14 +4,12 @@ from api import *
 from discord_slash import SlashCommand, SlashContext
 from discord_slash.utils.manage_commands import *
 import discord_slash
-from discord_buttons import *
 
 TOKEN = os.environ.get('AUTHTOKEN')
 
 client = commands.Bot(command_prefix="$")
 slash = SlashCommand(client, sync_commands=True)
-ddb = DiscordButton(client)
-guilds = [814596744472952902, 453460088590434305]
+guilds = [814596744472952902, 453460088590434305, ]
 
 @client.event
 async def on_ready():
@@ -54,5 +52,33 @@ async def _locate(ctx:SlashContext, vehicleid:str):
             await ctx.channel.send(embed=embed)
     else:
         await ctx.send("`Sorry, no vehicle with ID: {} was found!`".format(vehicleid.upper()))
+
+# /locate command
+@slash.slash(
+    name="stop",
+    description="Get Stop Information",
+    guild_ids=guilds,
+    options=[
+        create_option(
+            name="stopid",
+            description="Set the stop ID",
+            required=True,
+            option_type=3
+        )
+    ]
+)
+async def _stop(ctx:SlashContext, stopid:str):
+    msg = await ctx.send("`Loading Stop: {}`".format(stopid))
+    data = getStopInfo(stopid, 5)
+    if not data == None:
+        embed = discord.Embed(title=":busstop:  [Details for Stop {}]".format(stopid), description="Stop Realtime Board Information", color=0x00ff00)
+        
+        for i in data:
+            embed.add_field(name="@{} >> {} -> {}".format(i["departure_time"], i["route_short_name"], i["trip_headsign"]), value="{}".format(i["route_long_name"]), inline=False)
+        
+        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/867736415994511390/872670391133421608/bus.png")
+        await ctx.channel.send(embed=embed)
+    else:
+        await ctx.send("`Sorry, no Stop ID: {} was found!`".format(stopid))
 
 client.run(TOKEN)
