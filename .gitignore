@@ -1,3 +1,4 @@
 .archive
 discordbot/node_modules
-discordbot/.env.local
+discordbot/.env*
+discordbot/dist/
