@@ -1,4 +1,6 @@
 package com.nathandsouza.aucklandtransport.backend.services
 
-interface DataService {
+interface DataServiceInterface {
+
+    fun fetchDataFromApi() : String
 }

@@ -1,4 +1,9 @@
 package com.nathandsouza.aucklandtransport.backend.tasks
 
-class DatFetchTask {
+import com.nathandsouza.aucklandtransport.backend.services.DataServiceInterface
+import org.springframework.stereotype.Component
+
+@Component
+class DataFetchTask(private val dataService: DataServiceInterface) {
+
 }
