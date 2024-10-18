@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 class BackendController {
 
     @GetMapping("get-data")
-    fun getData(): String = "Here is some data"
+    fun getData(): String = "Here is some data - here is a random change"
 
 }
