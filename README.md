@@ -1,13 +1,15 @@
 # The [Unofficial] Auckland Transport Discord Bot
 
-## About:
+## About
+
 This is the repository for The [Unofficial] Auckland Transport Discord Bot. While this bot is still in alpha development, the first preview is now functional with a working command: /locate
 
 The aim of this Discord Bot is to provide users on the Discord platform a way to access Auckland Transport's real-time vehicle and bus stop information. Since Discord is supported on many platforms, this bot is available on those same platforms.
 
 Since this bot is currently in a very early development stage, it is not available to the public to be added to their personal servers.
 
-## Commands:
+## Commands
+
 > /locate <_vehicleID_>
 
 Through the use of the Vehicle ID system (i.e. AMP129 - train, or RT1303 - bus), using this in combination with the /locate command on a server with this bot, it displays the relevant information for that vehicle.

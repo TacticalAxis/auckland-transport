@@ -1,0 +1,5 @@
+.archive
+discordbot/node_modules
+discordbot/.env*
+discordbot/dist/
+db_test/
