@@ -305,14 +305,14 @@ components:
         - 1
         - 2
         - 3
-      type: number
+      type: integer
       example: 0
     Stop_ScheduleRelationship:
       enum:
         - 0
         - 1
         - 2
-      type: number
+      type: integer
       example: 0
     Effect:
       enum:
